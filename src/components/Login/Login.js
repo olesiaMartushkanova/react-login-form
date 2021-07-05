@@ -11,13 +11,29 @@ const Login = (props) => {
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
+  // With empty array of dependencies, useEffect() runs only once
+  useEffect(() => {
+    console.log('Second useEffect');
+  }, []);
+
   // After each re-run this will be run only if dependencies are met
+  // Every time when component is revaluated and enteredEmail or enteredPassword state has been changed
   // This code runs only of email and password are entered
   // Use effect is handling side effect
   useEffect(() => {
-    setFormIsValid(
-      enteredEmail.includes('@') && enteredPassword.trim().length > 6
-    );
+    const identifier = setTimeout(() => {
+      console.log('Side effect function');
+      setFormIsValid(
+        enteredEmail.includes('@') && enteredPassword.trim().length > 6
+      );
+    }, 500);
+
+    // Clean up function
+    // Runs before every next side effect function execution
+    return () => {
+      console.log('Clean up');
+      clearTimeout(identifier);
+    };
   }, [enteredEmail, enteredPassword]);
 
   const emailChangeHandler = (event) => {

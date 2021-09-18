@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useReducer, useContext } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useReducer,
+  useContext,
+  useRef,
+} from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
@@ -38,7 +44,7 @@ const passwordReducer = (state, action) => {
   return { value: '', isValid: false };
 };
 
-const Login = (props) => {
+const Login = () => {
   const [formIsValid, setFormIsValid] = useState(false);
   const [emailState, dispatchedEmail] = useReducer(emailReducer, {
     value: '',
@@ -95,12 +101,17 @@ const Login = (props) => {
     dispatchedPassword({ type: 'USER_BLUR' });
   };
 
+  const emailInputRef = useRef();
+  const passwordInputRef = useRef();
+
   const submitHandler = (event) => {
     event.preventDefault();
     if (formIsValid) {
       context.onLogin(emailState.value, passwordState.value);
     } else if (!emailState.isValid) {
+      emailInputRef.current.focus();
     } else {
+      passwordInputRef.current.activate();
     }
   };
 
@@ -108,6 +119,7 @@ const Login = (props) => {
     <Card className={classes.login}>
       <form onSubmit={submitHandler}>
         <Input
+          ref={emailInputRef}
           className={`${classes.control} ${
             emailState.isValid === false ? classes.invalid : ''
           }`}
@@ -121,6 +133,7 @@ const Login = (props) => {
         />
 
         <Input
+          ref={passwordInputRef}
           className={`${classes.control} ${
             passwordState.isValid === false ? classes.invalid : ''
           }`}

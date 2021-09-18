@@ -111,7 +111,7 @@ const Login = () => {
     } else if (!emailState.isValid) {
       emailInputRef.current.focus();
     } else {
-      passwordInputRef.current.activate();
+      passwordInputRef.current.focus();
     }
   };
 
